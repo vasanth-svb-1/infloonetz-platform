@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4 text-center">Search Influencers</h2>
+    <form method="get" action="{{ url_for('sponsor_influencer_search') }}">
+        <div class="row mb-3 align-items-end ">
+            <div class="col-md-3 mb-3">
+                <label for="query" class="form-label">Name or Username</label>
+                <input type="text" class="form-control" id="query" name="query" value="{{ query }}">
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="niche" class="form-label">Niche</label>
+                <input type="text" class="form-control" id="niche" name="niche" value="{{ niche }}">
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="min_reach" class="form-label">Minimum Reach</label>
+                <input type="number" class="form-control" id="min_reach" name="min_reach" value="{{ min_reach }}">
+            </div>
+            <div class="col-md-3 mb-3">
+                <button type="submit" class="btn btn-primary w-10">Search</button>
+            </div>
+        </div>
+    </form>
+
+    {% if influencers %}
+        <h3 class="mt-4 mb-4 text-center">Search Results</h3>
+        <div class="row">
+            {% for influencer in influencers %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ influencer.name }}</h5>
+                            <p class="card-text"><strong>Niche:</strong> {{ influencer.niche }}</p>
+                            <p class="card-text"><strong>Reach:</strong> {{ influencer.reach }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-center">No influencers found.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Influencer Statistics for {{ influencer.name }}</h2>
+    
+    <!-- Top Campaigns by Payment -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Top Campaigns by Payment</h5>
+            <canvas id="topCampaignsChart" style="max-height: 200px;"></canvas>
+        </div>
+    </div>
+    
+    <!-- Ad Request Status Distribution -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Ad Request Status Distribution</h5>
+            <canvas id="statusDistributionChart" style="max-height: 200px;"></canvas>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Top Campaigns by Payment
+    var topCampaignsCtx = document.getElementById('topCampaignsChart').getContext('2d');
+    var topCampaignsChart = new Chart(topCampaignsCtx, {
+        type: 'bar',
+        data: {
+            labels: {{ top_campaigns.names|tojson }},
+            datasets: [{
+                label: 'Total Payment',
+                data: {{ top_campaigns.payments|tojson }},
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    beginAtZero: true
+                },
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return '$' + value;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Ad Request Status Distribution
+    var statusDistributionCtx = document.getElementById('statusDistributionChart').getContext('2d');
+    var statusDistributionChart = new Chart(statusDistributionCtx, {
+        type: 'pie',
+        data: {
+            labels: {{ status_distribution.statuses|tojson }},
+            datasets: [{
+                data: {{ status_distribution.counts|tojson }},
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            return tooltipItem.label + ': ' + tooltipItem.raw + ' requests';
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

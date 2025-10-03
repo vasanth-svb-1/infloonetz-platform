@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InFLOONetz - Sign Up</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: url("{{ url_for('static', filename='images/background.jpg') }}") no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        .signup-container {
+            margin-top: 70px;
+            max-width: 600px;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            background-color: rgba(255,255,255,0.85);
+        }
+
+        .container{
+            background-color: rgba(2,135,193,0.35);
+        }
+        .form-group label {
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-size: 16px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .invalid-feedback {
+            display: block;
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 signup-container shadow-lg">
+                <h1 class="text-center mb-4">Sign Up</h1>
+                <form id="signupForm" action="{{ url_for('signup') }}" method="post" novalidate>
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" class="form-control" id="username" name="username" required>
+                        <div class="invalid-feedback" id="usernameFeedback"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                        <div class="invalid-feedback" id="emailFeedback"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                        <div class="invalid-feedback" id="passwordFeedback"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="role">Role</label>
+                        <select id="role" name="role" class="form-control" onchange="showRoleFields()" required>
+                            <option value="" disabled selected>Select your role</option>
+                            <option value="Admin">Admin</option>
+                            <option value="Influencer">Influencer</option>
+                            <option value="Sponsor">Sponsor</option>
+                        </select>
+                        <div class="invalid-feedback" id="roleFeedback"></div>
+                    </div>
+                    <div class="invalid-feedback" id="roleFeedback">{{message}}</div>
+                    <!-- Role-specific fields -->
+                    <div id="roleFields"></div>
+                    <button type="submit" class="btn btn-primary mt-4">Sign Up</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showRoleFields() {
+            const role = document.getElementById('role').value;
+            const roleFields = document.getElementById('roleFields');
+            const feedbackElements = {
+                username: document.getElementById('usernameFeedback'),
+                email: document.getElementById('emailFeedback'),
+                password: document.getElementById('passwordFeedback'),
+                role: document.getElementById('roleFeedback')
+            };
+
+            // Clear previous fields and feedback
+            roleFields.innerHTML = '';
+            Object.values(feedbackElements).forEach(el => el.textContent = '');
+
+            if (role === 'Influencer') {
+                roleFields.innerHTML = `
+                    <div class="form-group mt-3">
+                        <label for="name">Full Name</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                        <div class="invalid-feedback" id="nameFeedback"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="category">Category</label>
+                        <input type="text" class="form-control" id="category" name="category" required>
+                        <div class="invalid-feedback" id="categoryFeedback"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="niche">Niche</label>
+                        <input type="text" class="form-control" id="niche" name="niche" required>
+                        <div class="invalid-feedback" id="nicheFeedback"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="reach">Reach (Followers)</label>
+                        <input type="number" class="form-control" id="reach" name="reach" required>
+                        <div class="invalid-feedback" id="reachFeedback"></div>
+                    </div>
+                `;
+            } else if (role === 'Sponsor') {
+                roleFields.innerHTML = `
+                    <div class="form-group mt-3">
+                        <label for="company_name">Company Name</label>
+                        <input type="text" class="form-control" id="company_name" name="company_name" required>
+                        <div class="invalid-feedback" id="companyNameFeedback"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="industry">Industry</label>
+                        <input type="text" class="form-control" id="industry" name="industry" required>
+                        <div class="invalid-feedback" id="industryFeedback"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="budget">Budget</label>
+                        <input type="number" class="form-control" id="budget" name="budget" required>
+                        <div class="invalid-feedback" id="budgetFeedback"></div>
+                    </div>
+                `;
+            }
+        }
+
+        // Example JavaScript validation function (this should be updated based on your validation logic)
+        document.getElementById('signupForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission for demo purposes
+
+            let isValid = true;
+            const feedbackElements = {
+                username: document.getElementById('usernameFeedback'),
+                email: document.getElementById('emailFeedback'),
+                password: document.getElementById('passwordFeedback'),
+                role: document.getElementById('roleFeedback')
+            };
+
+            // Example validation (you should replace with actual validation logic)
+            if (!document.getElementById('username').value) {
+                feedbackElements.username.textContent = 'Username is required.';
+                isValid = false;
+            }
+            if (!document.getElementById('email').value) {
+                feedbackElements.email.textContent = 'Email is required.';
+                isValid = false;
+            }
+            if (!document.getElementById('password').value) {
+                feedbackElements.password.textContent = 'Password is required.';
+                isValid = false;
+            }
+            if (!document.getElementById('role').value) {
+                feedbackElements.role.textContent = 'Role is required.';
+                isValid = false;
+            }
+
+             // Username validation
+        const username = document.getElementById('username').value;
+        if (!/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(username)) {
+            feedbackElements.username.textContent = 'Username must be at least 8 characters long and include at least one letter, one digit, and one special character.';
+            isValid = false;
+        }
+
+        // Password validation
+        const password = document.getElementById('password').value;
+        if (!/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password)) {
+            feedbackElements.password.textContent = 'Password must be at least 8 characters long and include at least one letter, one digit, and one special character.';
+            isValid = false;
+        }
+
+        // Email validation (basic)
+        if (!document.getElementById('email').value) {
+            feedbackElements.email.textContent = 'Email is required.';
+            isValid = false;
+        }
+
+        // Role validation
+        if (!document.getElementById('role').value) {
+            feedbackElements.role.textContent = 'Role is required.';
+            isValid = false;
+        }
+
+        // Reach and Budget validation (for Influencer and Sponsor roles)
+        const role = document.getElementById('role').value;
+        if (role === 'Influencer') {
+            const reach = parseFloat(document.getElementById('reach').value);
+            if (reach < 0) {
+                feedbackElements.reach.textContent = 'Reach cannot be negative.';
+                isValid = false;
+            }
+        } else if (role === 'Sponsor') {
+            const budget = parseFloat(document.getElementById('budget').value);
+            if (budget < 0) {
+                feedbackElements.budget.textContent = 'Budget cannot be negative.';
+                isValid = false;
+            }
+        }
+
+            if (isValid) {
+                // Form is valid; submit it
+                this.submit();
+            }
+        });
+    </script>
+</body>
+
+</html>

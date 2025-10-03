@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">My Ad Requests</h2>
+    <div class="row">
+        {% for ad_request in ad_requests %}
+            {% if ad_request.status != 'Rejected' %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ ad_request.requirements }}</h5>
+                            <p class="card-text"><strong>Campaign:</strong> {{ ad_request.campaign.name }}</p>
+                            <p class="card-text"><strong>Payment Amount:</strong> ${{ ad_request.payment_amount }}</p>
+                            <p class="card-text"><strong>Status:</strong> {{ ad_request.status }}</p>
+                            <a href="{{ url_for('respond_ad_request', ad_request_id=ad_request.id) }}" class="btn btn-primary">Respond</a>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

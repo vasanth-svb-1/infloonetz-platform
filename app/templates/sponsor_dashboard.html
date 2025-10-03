@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Sponsor Dashboard</h2>
+
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Personal Details</h4>
+        </div>
+        <table class="table table-bordered">
+            <tbody>
+                <tr>
+                    <th>Company Name</th>
+                    <td>{{ sponsor.company_name }}</td>
+                </tr>
+                <tr>
+                    <th>Industry</th>
+                    <td>{{ sponsor.industry }}</td>
+                </tr>
+                <tr>
+                    <center><td colspan="2"><a href="{{ url_for('update_sponsor_profile') }}" class="btn btn-primary">Update Profile </a></td>
+                    </center>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header bg-secondary text-white">
+            <h4 class="mb-0">Your Campaigns</h4>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for campaign in campaigns %}
+                    <tr>
+                        <td>{{ campaign.name }}</td>
+                        <td>{{ campaign.description }}</td>
+                        <td>{{ campaign.start_date }}</td>
+                        <td>{{ campaign.end_date }}</td>
+                        <td>
+                            <a href="{{ url_for('view_campaign', campaign_id=campaign.id) }}" class="btn btn-info btn-sm">View</a>
+                            <a href="{{ url_for('edit_campaign', campaign_id=campaign.id) }}" class="btn btn-warning btn-sm">Edit</a>
+                            <form action="{{ url_for('delete_campaign', campaign_id=campaign.id) }}" method="POST" style="display:inline;">
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header bg-secondary text-white">
+            <h4 class="mb-0">Your Ad Requests</h4>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Campaign</th>
+                        <th>Influencer</th>
+                        <th>Payment Amount</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ad_request in ad_requests %}
+                    <tr>
+                        <td>{{ ad_request.campaign.name }}</td>
+                        <td>{{ ad_request.influencer.name }}</td>
+                        <td>₹{{ ad_request.payment_amount }}</td>
+                        <td>{{ ad_request.status }}</td>
+                        <td>
+                            <a href="{{ url_for('view_ad_request', ad_request_id=ad_request.id) }}" class="btn btn-info btn-sm align-items-right" style="width:auto;">View</a>
+                            <a href="{{ url_for('edit_ad_request', ad_request_id=ad_request.id) }}" class="btn btn-warning btn-sm align-items-right">Edit</a>
+                            <form action="{{ url_for('delete_ad_request', ad_request_id=ad_request.id) }}" method="POST" style="display:inline;">
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header bg-secondary text-white">
+            <h4 class="mb-0">Ongoing Negotiations</h4>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Campaign</th>
+                        <th>Influencer</th>
+                        <th>Proposed Amount</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for negotiation in ongoing_negotiations %}
+                    <tr>
+                        <td>{{ negotiation.campaign.name }}</td>
+                        <td>{{ negotiation.influencer.name }}</td>
+                        <td>₹{{ negotiation.payment_amount }}</td>
+                        <td>
+                            <a href="{{ url_for('view_ad_request', ad_request_id=negotiation.id) }}" class="btn btn-info btn-sm">Review</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

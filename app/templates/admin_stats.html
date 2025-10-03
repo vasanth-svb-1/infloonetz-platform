@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Admin Dashboard</h2>
+
+    <!-- User Growth Line Chart -->
+    <div class="card card-body mt-4">
+        <h4>User Growth Over Time</h4>
+        <canvas id="userGrowthChart" style="max-height: 400px;"></canvas>
+    </div>
+
+    <!-- Ad Requests Pie Chart -->
+    <div class="card card-body mt-4">
+        <h4>Ad Request Distribution</h4>
+        <canvas id="adRequestChart" style="max-height: 400px;"></canvas>
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Line Chart for User Growth
+    const userGrowthCtx = document.getElementById('userGrowthChart').getContext('2d');
+    const userGrowthData = {
+        labels: {{ user_growth_labels|tojson }},
+        datasets: [{
+            label: 'Number of Users',
+            data: {{ user_growth_data|tojson }},
+            borderColor: 'rgba(54, 162, 235, 1)',
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            borderWidth: 1
+        }]
+    };
+
+    const userGrowthChart = new Chart(userGrowthCtx, {
+        type: 'line',
+        data: userGrowthData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Month-Year'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Number of Users'
+                    },
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Pie Chart for Ad Request Status
+    const adRequestCtx = document.getElementById('adRequestChart').getContext('2d');
+    const adRequestData = {
+        labels: {{ ad_request_labels|tojson }},
+        datasets: [{
+            label: 'Ad Request Status',
+            data: {{ ad_request_data|tojson }},
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+            ],
+            borderWidth: 1
+        }]
+    };
+
+    const adRequestChart = new Chart(adRequestCtx, {
+        type: 'pie',
+        data: adRequestData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+</script>
+{% endblock %}

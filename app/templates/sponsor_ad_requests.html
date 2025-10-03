@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">My Ad Requests</h2>
+        <a href="{{ url_for('new_ad_request') }}" class="btn btn-success">Create New Ad Request</a>
+    </div>
+    <div class="row">
+        {% if ad_requests %}
+            {% for ad_request in ad_requests %}
+            {% if ad_request.status != 'Rejected' %}
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm border-light">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ ad_request.requirements }}</h5>
+                        <p class="card-text"><strong>Campaign:</strong> {{ ad_request.campaign.name }}</p>
+                        <p class="card-text"><strong>Influencer:</strong> {{ ad_request.influencer.name }}</p>
+                        <p class="card-text"><strong>Payment Amount:</strong> ₹{{ ad_request.payment_amount }}</p>
+                        <p class="card-text"><strong>Status:</strong> {{ ad_request.status }}</p>
+                        <div class="align-items-center justify-content mt-45">
+                            <a href="{{ url_for('edit_ad_request', ad_request_id=ad_request.id) }}" class="btn btn-warning btn-m mr-2">Edit</a>
+                            <form action="{{ url_for('delete_ad_request', ad_request_id=ad_request.id) }}" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-danger btn-m">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        {% else %}
+        <div class="col-md-12 text-center">
+            <div class="card shadow-sm border-light">
+                <div class="card-body">
+                    <p>No ad requests available.</p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

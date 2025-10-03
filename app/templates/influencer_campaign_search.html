@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Search Campaigns</h2>
+
+    <!-- Search Form -->
+    <form method="get" action="{{ url_for('influencer_campaign_search') }}" class="mb-4">
+        <div class="form-row align-items-end">
+            <div class="form-group col-md-3">
+                <label for="query">Title or Description</label>
+                <input type="text" class="form-control" id="query" name="query" value="{{ query }}" placeholder="Enter title or description">
+            </div>
+            <div class="form-group col-md-3">
+                <label for="min_budget">Minimum Budget</label>
+                <input type="number" class="form-control" id="min_budget" name="min_budget" value="{{ min_budget }}" placeholder="Enter minimum budget">
+            </div>
+            <div class="form-group col-md-3">
+                <button type="submit" class="btn btn-primary w-100">Search</button>
+            </div>
+        </div>
+    </form>
+
+    <!-- Search Results -->
+    {% if campaigns %}
+        <h3 class="mb-4">Search Results</h3>
+        <div class="row">
+            {% for campaign in campaigns %}
+                {% if campaign.visibility == 'public' %}
+                <div class="col-md-4 mb-4">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ campaign.title }}</h5>
+                            <p class="card-text"><strong>Description:</strong> {{ campaign.description }}</p>
+                            <p class="card-text"><strong>Budget:</strong> ₹{{ campaign.budget }}</p>
+                            <p class="card-text"><strong>Deadline:</strong> {{ campaign.end_date }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No campaigns found.</p>
+    {% endif %}
+</div>
+{% endblock %}

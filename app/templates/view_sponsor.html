@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Sponsor Details</h1>
+    
+    <table class="table table-striped">
+        <tr>
+            <th>Username</th>
+            <td>{{ current_user.username }}</td>
+        </tr>
+        <tr>
+            <th>Company Name</th>
+            <td>{{ sponsor.company_name }}</td>
+        </tr>
+        <tr>
+            <th>Industry</th>
+            <td>{{ sponsor.industry }}</td>
+        </tr>
+        <tr>
+            <th>Budget</th>
+            <td>${{ sponsor.budget }}</td>
+        </tr>
+        <tr>
+            <th>Flagged</th>
+            <td>{{ 'Yes' if sponsor.flag else 'No' }}</td>
+        </tr>
+    </table>
+
+    {% if not sponsor.flag %}
+    <form method="post" action="{{ url_for('flag_user', user_id=sponsor.user_id) }}" class="d-inline">
+        <button type="submit" class="btn btn-warning btn-sm">Flag</button>
+    </form>
+    {% else %}
+    <form method="post" action="{{ url_for('unflag_user', user_id=sponsor.user_id) }}" class="d-inline">
+        <button type="submit" class="btn btn-success btn-sm">Unflag</button>
+    </form>
+    {% endif %}
+    <form method="post" action="{{ url_for('delete_sponsor', user_id=sponsor.user_id) }}" class="d-inline">
+        <button type="submit" class="btn btn-danger">Delete Sponsor</button>
+    </form>
+    <a href="{{ url_for('admin_search') }}" class="btn btn-secondary btn-sm">Back to Search</a>
+</div>
+{% endblock %}
+
+
+

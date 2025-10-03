@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Sponsor Statistics for {{sponsor.company_name}}</h2>
+
+    <!-- Campaign Performance Line Chart -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Campaign Performance</h5>
+            <canvas id="campaignPerformanceChart" style="max-height: 200px;"></canvas>
+        </div>
+    </div>
+
+    <!-- Ad Request Status by Campaign Pie Chart -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Ad Request Status by Campaign</h5>
+            <canvas id="adRequestStatusChart" style="max-height: 200px;"></canvas>
+        </div>
+    </div>
+
+    <!-- Budget Allocation Across Campaigns Doughnut Chart -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Budget Allocation Across Campaigns</h5>
+            <canvas id="budgetAllocationChart" style="max-height: 200px;"></canvas>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Campaign Performance Line Chart
+const ctxCampaignPerformance = document.getElementById('campaignPerformanceChart').getContext('2d');
+const campaignPerformanceChart = new Chart(ctxCampaignPerformance, {
+    type: 'line',
+    data: {
+        labels: {{ campaign_names | tojson }},
+        datasets: [
+            {% for campaign, data in campaign_performance.items() %}
+            {
+                label: '{{ campaign }}',
+                data: {{ data | tojson }},
+                borderColor: 'rgba(75, 192, 192, 1)',
+                fill: false
+            },
+            {% endfor %}
+        ]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false
+    }
+});
+
+// Ad Request Status by Campaign Pie Chart
+const ctxAdRequestStatus = document.getElementById('adRequestStatusChart').getContext('2d');
+const adRequestStatusChart = new Chart(ctxAdRequestStatus, {
+    type: 'pie',
+    data: {
+        labels: ['Pending', 'Accepted', 'Rejected','Negotiated'],
+        datasets: [{
+            label: 'Ad Request Status',
+            data: [
+                {% for campaign, statuses in ad_request_status.items() %}
+                {{ statuses['Pending'] }},
+                {{ statuses['Accepted'] }},
+                {{ statuses['Rejected'] }},
+                {{ statuses['Negotiated'] }},
+                {% endfor %}
+            ],
+            backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)'],
+            borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)'],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false
+    }
+});
+
+// Budget Allocation Across Campaigns Doughnut Chart
+const ctxBudgetAllocation = document.getElementById('budgetAllocationChart').getContext('2d');
+const budgetAllocationChart = new Chart(ctxBudgetAllocation, {
+    type: 'doughnut',
+    data: {
+        labels: {{ budget_allocation['keys'] | tojson }},
+        datasets: [{
+            label: 'Budget Allocation',
+            data: {{ budget_allocation['values'] | tojson }},
+            backgroundColor: ['rgba(153, 102, 255, 0.2)', 'rgba(255, 159, 64, 0.2)', 'rgba(75, 192, 192, 0.2)'],
+            borderColor: ['rgba(153, 102, 255, 1)', 'rgba(255, 159, 64, 1)', 'rgba(75, 192, 192, 1)'],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false
+    }
+});
+</script>
+{% endblock %}

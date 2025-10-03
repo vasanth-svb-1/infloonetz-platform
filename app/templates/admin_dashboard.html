@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="text-center my-4">Admin Dashboard</h1>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Active Users</h5>
+                    <p class="card-text">{{ active_users }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Total Campaigns</h5>
+                    <p class="card-text">{{ total_campaigns }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Public Campaigns</h5>
+                    <p class="card-text">{{ public_campaigns }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Private Campaigns</h5>
+                    <p class="card-text">{{ private_campaigns }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Total Ad Requests</h5>
+                    <p class="card-text">{{ ad_requests }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Pending Ad Requests</h5>
+                    <p class="card-text">{{ pending_ad_requests }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Accepted Ad Requests</h5>
+                    <p class="card-text">{{ accepted_ad_requests }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Rejected Ad Requests</h5>
+                    <p class="card-text">{{ rejected_ad_requests }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Negotiated Ad Requests</h5>
+                    <p class="card-text">{{ negotiated_ad_requests }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Flagged Sponsors</h5>
+                    <p class="card-text">{{ flagged_sponsors }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Flagged Influencers</h5>
+                    <p class="card-text">{{ flagged_influencers }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

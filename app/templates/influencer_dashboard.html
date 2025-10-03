@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Influencer Dashboard</h2>
+
+    <div class="card mb-4">
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <th>Name</th>
+                            <td>{{ influencer.name }}</td>
+                        </tr>
+                        <tr>
+                            <th>Category</th>
+                            <td>{{ influencer.category }}</td>
+                        </tr>
+                        <tr>
+                            <th>Niche</th>
+                            <td>{{ influencer.niche }}</td>
+                        </tr>
+                        <tr>
+                            <th>Reach</th>
+                            <td>{{ influencer.reach }}</td>
+                        </tr>
+                        <tr><td colspan="2">
+                        <a href="{{ url_for('update_influencer_profile') }}" class="btn btn-primary btn-l">Update Profile</a>
+                    </td></tr>
+                    </tbody>
+                </table>
+        </div>     
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h3 class="card-title mb-3">Your Ad Requests</h3>
+            <table class="table table-striped table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Campaign</th>
+                        <th>Requirements</th>
+                        <th>Payment Amount</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ad_request in ad_requests %}
+                    {% if ad_request.status != "Rejected" %}
+                    <tr>
+                        <td>{{ ad_request.campaign.name }}</td>
+                        <td>{{ ad_request.requirements }}</td>
+                        <td>${{ ad_request.payment_amount }}</td>
+                        <td>{{ ad_request.status }}</td>
+                        <td>
+                            {% if ad_request.status == "Pending" %}
+                            <a href="{{ url_for('respond_ad_request', ad_request_id=ad_request.id) }}" class="btn btn-info btn-sm">Respond</a>
+                            {% else %}
+                            <a href="{{ url_for('respond_ad_request', ad_request_id=ad_request.id) }}" class="btn btn-info btn-sm">Review</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h3 class="card-title mb-3">Accepted Campaigns</h3>
+            <table class="table table-striped table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Campaign</th>
+                        <th>Requirements</th>
+                        <th>Payment Amount</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for campaign in accepted_campaigns %}
+                    <tr>
+                        <td>{{ campaign.campaign.name }}</td>
+                        <td>{{ campaign.requirements }}</td>
+                        <td>${{ campaign.payment_amount }}</td>
+                        <td>{{ campaign.status }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h3 class="card-title mb-3">Proposed Negotiations</h3>
+            <table class="table table-striped table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Campaign</th>
+                        <th>Proposed Amount</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for negotiation in proposed_negotiations %}
+                    <tr>
+                        <td>{{ negotiation.campaign.name }}</td>
+                        <td>${{ negotiation.payment_amount }}</td>
+                        <td>{{ negotiation.status }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

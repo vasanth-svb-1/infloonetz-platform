@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="text-center mb-4">Admin Search</h1>
+    
+    <div class="card shadow-sm p-4 mb-4">
+        <form method="post" action="{{ url_for('admin_search') }}">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="search_query">Search by Username</label>
+                    <input type="text" class="form-control" id="search_query" name="search_query" value="{{ request.form.get('search_query', '') }}">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="search_type">Search By</label>
+                    <select class="form-control" id="search_type" name="search_type" required>
+                        <option value="all">All</option>
+                        <option value="sponsor" {% if request.form.get('search_type') == 'sponsor' %}selected{% endif %}>Sponsor</option>
+                        <option value="influencer" {% if request.form.get('search_type') == 'influencer' %}selected{% endif %}>Influencer</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="company_name">Company Name (Sponsor)</label>
+                    <input type="text" class="form-control" id="company_name" name="company_name" value="{{ request.form.get('company_name', '') }}">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="name">Name (Influencer)</label>
+                    <input type="text" class="form-control" id="name" name="name" value="{{ request.form.get('name', '') }}">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="is_flagged">Is Flagged</label>
+                    <select class="form-control" id="is_flagged" name="is_flagged">
+                        <option value="">All</option>
+                        <option value="true" {% if request.form.get('is_flagged') == 'true' %}selected{% endif %}>Yes</option>
+                        <option value="false" {% if request.form.get('is_flagged') == 'false' %}selected{% endif %}>No</option>
+                    </select>
+                </div>
+            </div>
+            <center><button type="submit" class="btn btn-primary btn-m custom-btn-width my-1 mx-auto">Search</button></center>
+        </form>
+    </div>
+
+    {% if sponsors %}
+    <h2 class="mt-5 mb-3 text-center">Sponsors</h2>
+    <ul class="list-group">
+        {% for sponsor in sponsors %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+                <strong>{{ sponsor.company_name }}</strong>
+            </div>
+            <div>
+                {% if not sponsor.flag %}
+                <form method="post" action="{{ url_for('flag_user', user_id=sponsor.user_id) }}" class="d-inline">
+                    <button type="submit" class="btn btn-warning btn-sm">Flag</button>
+                </form>
+                {% else %}
+                <form method="post" action="{{ url_for('unflag_user', user_id=sponsor.user_id) }}" class="d-inline">
+                    <button type="submit" class="btn btn-success btn-sm">Unflag</button>
+                </form>
+                {% endif %}
+                <a href="{{ url_for('view_sponsor', user_id=sponsor.user_id) }}" class="btn btn-info btn-sm ml-2">View Details</a>
+            </div>
+        </li>
+        {% endfor %}
+        {% else %}
+        <p class="text-center">No sponsors found.</p>
+    </ul>
+    {% endif %}
+
+    {% if influencers %}
+    <h2 class="mt-5 mb-3 text-center">Influencers</h2>
+    <ul class="list-group">
+        {% for influencer in influencers %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+                <strong>{{ influencer.name }}</strong>
+            </div>
+            <div>
+                {% if not influencer.flag %}
+                <form method="post" action="{{ url_for('flag_user', user_id=influencer.user_id) }}" class="d-inline">
+                    <button type="submit" class="btn btn-warning btn-sm">Flag</button>
+                </form>
+                {% else %}
+                <form method="post" action="{{ url_for('unflag_user', user_id=influencer.user_id) }}" class="d-inline">
+                    <button type="submit" class="btn btn-success btn-sm">Unflag</button>
+                </form>
+                {% endif %}
+                <a href="{{ url_for('view_influencer', user_id=influencer.user_id) }}" class="btn btn-info btn-sm ml-2">View Details</a>
+            </div>
+        </li>
+        {% endfor %}
+        {% else %}
+        <p class="text-center">No influencers found.</p>
+    </ul>
+    {% endif %}
+</div>
+{% endblock %}
